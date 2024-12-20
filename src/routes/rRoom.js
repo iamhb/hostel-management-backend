@@ -53,4 +53,34 @@ router.post('/getAll', async (req, res) => {
     }
 });
 
+// Deactivate Room API (POST)
+router.post('/deactivate', async (req, res) => {
+    try {
+        const { roomId } = req.body;
+
+        if (!roomId) {
+            return res.status(400).json({ message: 'Room ID is required' });
+        }
+
+        // Find the room and update its isActive field to false
+        const updatedRoom = await Room.findByIdAndUpdate(
+            roomId,
+            { isActive: false },
+        );
+
+        if (!updatedRoom) {
+            return res.status(404).json({ message: 'Room not found' });
+        }
+
+        res.status(200).json({
+            message: 'Room deactivated successfully',
+            room: updatedRoom,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 module.exports = router;
