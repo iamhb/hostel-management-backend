@@ -1,12 +1,3 @@
-// const mCustomer = {
-//     name:'',
-//     age:0,
-//     adhar:'',
-//     address:'',
-//     mobile:'',
-//     email:'',
-// }
-
 
 let mongoose = require('mongoose');
 
