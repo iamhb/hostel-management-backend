@@ -1,22 +1,6 @@
-// const mRoom = {
-//     hotelId:'',
-//     roomName:'',
-//     roomSize:'',
-//     bedSize:'',
-//     maxOccupany:0,
-//     isAcAvailabe:true,
-//     isActive:true,
-// }
-
-
 let mongoose = require('mongoose');
 
 let roomSchema = new mongoose.Schema({
-    hotelId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hotel',
-        required: true,
-    },
     roomName: {
         type: String,
         required: true,
@@ -35,6 +19,10 @@ let roomSchema = new mongoose.Schema({
     isAcAvailable: {
         type: Boolean,
         default: true,
+    },
+    rentPerDay: {
+        type: Number,
+        required: true,
     },
     isActive: {
         type: Boolean,

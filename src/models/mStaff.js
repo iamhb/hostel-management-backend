@@ -1,15 +1,3 @@
-// const mStaff = {
-//     name:'',
-//     age:0,
-//     adhar:'',
-//     address:'',
-//     mobile:'',
-//     email:'',
-//     isActive:true,
-// }
-
-
-
 let mongoose = require('mongoose');
 
 let staffSchema = new mongoose.Schema({
@@ -45,6 +33,10 @@ let staffSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    password: {
+        type: String,
+        default: true,
+    }
 });
 
 staffSchema.set('timestamps', true);

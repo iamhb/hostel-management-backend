@@ -1,7 +1,7 @@
 const express = require('express');
 const app = new express();
 const cors = require('cors');
-const PORT = 3001;
+const PORT = 3000;
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 // mongoose.set('strictQuery', false);
@@ -11,6 +11,9 @@ const DB_CONNECTION_STRING = "mongodb+srv://nexus_admin:ITHANDAPASSWORD@nexus-de
 
 app.use(express.json());
 
+
+const rCustomer = require('./src/routes/rCustomer');
+const rStaff = require('./src/routes/rStaff');
 
 mongoose
     .connect(DB_CONNECTION_STRING)
@@ -41,9 +44,15 @@ app.get("/", (req, res) => {
     res.send("Hello");
 });
 
+
+app.use('/api/customers', rCustomer);
+app.use('/api/staff', rStaff);
+
 app.listen(PORT, () => {
     console.log("Server started at", PORT);
 });
+
+
 
 
 // Save users
