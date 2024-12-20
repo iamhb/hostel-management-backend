@@ -14,6 +14,7 @@ app.use(express.json());
 
 const rCustomer = require('./src/routes/rCustomer');
 const rStaff = require('./src/routes/rStaff');
+const rRoom = require('./src/routes/rRoom');
 
 mongoose
     .connect(DB_CONNECTION_STRING)
@@ -47,6 +48,7 @@ app.get("/", (req, res) => {
 
 app.use('/api/customers', rCustomer);
 app.use('/api/staff', rStaff);
+app.use('/api/room', rRoom);
 
 app.listen(PORT, () => {
     console.log("Server started at", PORT);
