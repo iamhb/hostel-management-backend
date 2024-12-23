@@ -14,7 +14,6 @@ let roomSchema = new mongoose.Schema({
     maxOccupancy: {
         type: Number,
         required: true,
-        min: 1,
     },
     isAcAvailable: {
         type: Boolean,
