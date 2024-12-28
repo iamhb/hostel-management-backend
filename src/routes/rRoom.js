@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Create Room API (POST)
 router.post('/create', async (req, res) => {
+
     try {
         const { roomName, roomSize, bedSize, maxOccupancy, isAcAvailable, rentPerDay, isActive } = req.body;
 
@@ -41,7 +42,7 @@ router.post('/create', async (req, res) => {
 router.post('/getAll', async (req, res) => {
     try {
         // Fetch all rooms
-        const rooms = await Room.find();
+        const rooms = await Room.find({ isActive: true });
 
         res.status(200).json({
             message: 'Rooms retrieved successfully.',
@@ -50,6 +51,41 @@ router.post('/getAll', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/edit', async (req, res) => {
+    const { id, roomName, roomSize, bedSize, maxOccupancy, isAcAvailable, rentPerDay, isActive } = req.body;
+
+    // Validate if the ID is provided
+    if (!id) {
+        return res.status(400).json({ error: "Room ID is required for editing." });
+    }
+
+    try {
+        // Find the room by ID and update it with the provided details
+        const updatedRoom = await Room.findByIdAndUpdate(
+            id,
+            {
+                roomName,
+                roomSize,
+                bedSize,
+                maxOccupancy,
+                isAcAvailable,
+                rentPerDay,
+                isActive,
+            },
+            { new: true, runValidators: true } // `new: true` returns the updated document, `runValidators` ensures schema validation
+        );
+
+        if (!updatedRoom) {
+            return res.status(404).json({ error: "Room not found with the provided ID." });
+        }
+
+        res.status(200).json({ message: "Room updated successfully.", updatedRoom });
+    } catch (error) {
+        console.error("Error updating room:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 

@@ -43,7 +43,7 @@ router.post('/create', async (req, res) => {
 router.post('/getAll', async (req, res) => {
     try {
         // Retrieve all staff from the database
-        const staffMembers = await Staff.find({},{password:0});
+        const staffMembers = await Staff.find({}, { password: 0 });
 
         // Send the response
         res.status(200).json(staffMembers);
@@ -52,6 +52,45 @@ router.post('/getAll', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+// Edit staff
+router.post('/edit', async (req, res) => {
+    try {
+        const { id, name, age, adhar, address, mobile, email, isActive } = req.body;
+
+        // Validate required fields
+        if (!id || !name || !age || !adhar || !address || !mobile || !email) {
+            return res.status(400).json({ error: 'All fields including the ID are required.' });
+        }
+
+        // Find and update the staff document
+        const updatedStaff = await Staff.findByIdAndUpdate(
+            id,
+            {
+                name,
+                age,
+                adhar,
+                address,
+                mobile,
+                email,
+                isActive,
+            },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedStaff) {
+            return res.status(404).json({ error: 'Staff not found.' });
+        }
+
+        // Send the updated document as the response
+        res.status(200).json(updatedStaff);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 
 // Change password API 
 router.post('/changePassword', async (req, res) => {

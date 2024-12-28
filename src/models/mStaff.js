@@ -22,7 +22,7 @@ let staffSchema = new mongoose.Schema({
     mobile: {
         type: String,
         required: true,
-        match: /^[0-9]{10}$/, // Assuming mobile number is a 10-digit number
+        // match: /^[0-9]{10}$/, // Assuming mobile number is a 10-digit number
     },
     email: {
         type: String,
@@ -36,6 +36,10 @@ let staffSchema = new mongoose.Schema({
     password: {
         type: String,
         default: true,
+    },
+    Role:{
+        type:String,
+        default:'staff'
     }
 });
 

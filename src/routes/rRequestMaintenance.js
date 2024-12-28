@@ -1,15 +1,17 @@
 const express = require('express');
 const mMaintenanceRequest = require('../models/mMaintenanceRequest');
 const mMaintenanceRequestLog = require('../models/mMaintenanceRequestLog');
+const mStaff = require('../models/mStaff');
+const mRoom = require('../models/mRoom');
 
 const router = express.Router();
 
 
 router.post('/create', async (req, res) => {
     try {
-        const { roomId, reason, priorityLevel } = req.body;
+        const { roomId, reason, priorityLevel, staffId, category } = req.body;
 
-        if (!roomId || !reason || !priorityLevel) {
+        if (!roomId || !reason || !priorityLevel || !staffId) {
             return res.status(400).json({ message: 'roomId, reason, and priorityLevel are required' });
         }
 
@@ -17,6 +19,8 @@ router.post('/create', async (req, res) => {
             roomId,
             reason,
             priorityLevel,
+            staffId,
+            category
         });
 
         res.status(201).json({ message: 'Maintenance request submitted successfully', request: newRequest });
@@ -90,7 +94,7 @@ router.post('/logs/update', async (req, res) => {
 router.post('/reports', async (req, res) => {
     try {
         const requests = await mMaintenanceRequest.find();
-            // .populate('logs');
+        // .populate('logs');
 
         const report = requests.map(request => ({
             roomId: request.roomId,
@@ -110,5 +114,52 @@ router.post('/reports', async (req, res) => {
 });
 
 
+router.post('/getMaintaice', async (req, res) => {
+    let staffIds = [];
+    let roomIds = [];
+    try {
+        const requests = await mMaintenanceRequest.find().lean();;
+        requests.forEach((each) => {
+            staffIds.push(each.staffId);
+            roomIds.push(each.roomId);
+        });
+
+
+        // console.log({ staffIds, roomIds });roomName
+
+        const staffDetails = await mStaff.find({ _id: { $in: staffIds } }, { name: 1 });
+        const roomDetails = await mRoom.find({ _id: { $in: roomIds } }, { roomName: 1 });
+
+        // const combinedData = requests.map((request)=>{
+
+        //     {
+
+        //         request,
+        //          staff: staffDetails.find(staff => staff._id.toString() === request.staffId.toString()),
+        //         room: roomDetails.find(room => room._id.toString() === request.roomId.toString())
+        //     }
+        //     // console.log("request",request);
+
+        // })
+
+        const combinedData = requests.map((request) => ({
+            ...request, // Spread request data
+            
+            staff: staffDetails.find(staff => staff._id.toString() === request.staffId?.toString()) || null,
+            room: roomDetails.find(room => room._id.toString() === request.roomId?.toString()) || null
+        }));
+
+        console.log({ staffDetails, roomDetails });
+
+        console.log("------------");
+        console.log(combinedData);
+
+
+        res.status(200).json(combinedData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
 
 module.exports = router;

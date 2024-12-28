@@ -6,6 +6,11 @@ const maintenanceRequestSchema = new mongoose.Schema({
         ref: 'Room', // Reference to the Room model
         required: true,
     },
+    staffId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Staff', // Reference to the Room model
+        required: true,
+    },
     reason: {
         type: String,
         required: true,
@@ -18,6 +23,9 @@ const maintenanceRequestSchema = new mongoose.Schema({
         type: Number,
         min: 1,
         max: 5,
+    },
+    category:{
+        type:String,
     },
     priorityLevel: {
         type: String,
