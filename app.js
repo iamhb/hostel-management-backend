@@ -16,6 +16,7 @@ const rCustomer = require('./src/routes/rCustomer');
 const rStaff = require('./src/routes/rStaff');
 const rRoom = require('./src/routes/rRoom');
 const rRequestMaintenance = require('./src/routes/rRequestMaintenance');
+const rRoomAllocation = require('./src/routes/rRoomAllocation');
 const mStaff = require('./src/models/mStaff');
 
 mongoose
@@ -51,7 +52,7 @@ app.use('/api/customers', rCustomer);
 app.use('/api/staff', rStaff);
 app.use('/api/room', rRoom);
 app.use('/api/maintenance', rRequestMaintenance);
-
+app.use('/api/roomAllocation', rRoomAllocation);
 
 
 
