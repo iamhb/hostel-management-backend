@@ -130,6 +130,7 @@ app.post('/login', async (req, res) => {
         // Return the name and role if credentials are valid
         res.status(200).json({
             name: staff.name,
+            staffId: staff._id,
             role: staff.Role,
         });
     } catch (error) {
