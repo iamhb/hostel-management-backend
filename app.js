@@ -58,47 +58,6 @@ app.use('/api/dashboard',rDashboard);
 
 
 
-// Login
-
-// app.post('/login', async (req, res) => {
-//     const { email, password } = req.body;
-
-//     if (!email || !password) {
-//         return res.status(400).json({ message: 'Email and password are required.' });
-//     }
-
-//     try {
-//         // Find the staff by email
-//         const staff = await mStaff.findOne({ email });
-
-//         if (!staff) {
-//             return res.status(404).json({ message: 'Staff not found.' });
-//         }
-
-//         // Compare the provided password with the stored password
-//         // const isMatch = await bcrypt.compare(password, staff.password);
-//         const isMatch = password === staff.password;
-
-//         if (!isMatch) {
-//             return res.status(401).json({ message: 'Invalid credentials.' });
-//         }
-
-//         // Set the cookie with user information (name, role) for session management
-//         const userData = { name: staff.name, role: staff.Role };
-//         res.cookie('user', JSON.stringify(userData), {
-//             httpOnly: true, // Prevents client-side JS from accessing the cookie
-//             // secure: process.env.NODE_ENV === 'production', // Only send cookie over HTTPS in production
-//             maxAge: 86400000, // Cookie expires after 1 day
-//             sameSite: 'strict', // Restrict the cookie to the same site
-//         });
-
-//         // Return response without sensitive data (like password)
-//         res.status(200).json({ message: 'Login successful' });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Server error.' });
-//     }
-// });
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
