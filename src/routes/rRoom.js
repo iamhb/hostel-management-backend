@@ -1,7 +1,8 @@
 const express = require('express');
 const Room = require('../models/mRoom');
-
+const mRoomAllocation = require('../models/mRoomAllocation');
 const router = express.Router();
+const _ = require('lodash');
 
 // Create Room API (POST)
 router.post('/create', async (req, res) => {
@@ -42,8 +43,21 @@ router.post('/create', async (req, res) => {
 router.post('/getAll', async (req, res) => {
     try {
         // Fetch all rooms
-        const rooms = await Room.find({ isActive: true });
-
+        const rooms = await Room.find({ },{},{lean:true});
+        const roomAllocationList = await mRoomAllocation.find({});
+        const grpdAllocationByRoomId = _.groupBy(roomAllocationList, 'roomId');
+        rooms.forEach(eachRoom => {
+            eachRoom['allocation'] = {};
+            let eachRoomsAllocation = grpdAllocationByRoomId[eachRoom._id];
+            if (eachRoomsAllocation && eachRoomsAllocation.length) {
+                eachRoomsAllocation = _.orderBy(eachRoomsAllocation, '_id');
+                eachRoom['allocation'] = eachRoomsAllocation[0];
+            } else {
+                eachRoom['allocation'] = {
+                    'status': 'open',
+                }
+            }
+        })
         res.status(200).json({
             message: 'Rooms retrieved successfully.',
             rooms,

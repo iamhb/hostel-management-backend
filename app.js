@@ -18,6 +18,7 @@ const rRoom = require('./src/routes/rRoom');
 const rRequestMaintenance = require('./src/routes/rRequestMaintenance');
 const rRoomAllocation = require('./src/routes/rRoomAllocation');
 const mStaff = require('./src/models/mStaff');
+const rDashboard = require('./src/routes/rDashboard');
 
 mongoose
     .connect(DB_CONNECTION_STRING)
@@ -53,6 +54,7 @@ app.use('/api/staff', rStaff);
 app.use('/api/room', rRoom);
 app.use('/api/maintenance', rRequestMaintenance);
 app.use('/api/roomAllocation', rRoomAllocation);
+app.use('/api/dashboard',rDashboard);
 
 
 
