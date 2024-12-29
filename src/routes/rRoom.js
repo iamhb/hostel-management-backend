@@ -1,6 +1,7 @@
 const express = require('express');
 const Room = require('../models/mRoom');
 const mRoomAllocation = require('../models/mRoomAllocation');
+const mCustomer = require('../models/mCustomer');
 const router = express.Router();
 const _ = require('lodash');
 
@@ -43,8 +44,15 @@ router.post('/create', async (req, res) => {
 router.post('/getAll', async (req, res) => {
     try {
         // Fetch all rooms
-        const rooms = await Room.find({ },{},{lean:true});
-        const roomAllocationList = await mRoomAllocation.find({});
+        const rooms = await Room.find({}, {}, { lean: true });
+        const customerList = await mCustomer.find({}, {}, { lean: true });
+        const grpdCustomerById = _.groupBy(customerList,'_id');
+        const roomAllocationList = await mRoomAllocation.find({}, {}, { lean: true });
+        roomAllocationList.forEach(eachRoomAllocation=>{
+            eachRoomAllocation['customerName'] = grpdCustomerById[eachRoomAllocation.customerId][0]['name'];
+        });
+        
+        // let allocatedUserList = roomAllocationList.map(each => each.)
         const grpdAllocationByRoomId = _.groupBy(roomAllocationList, 'roomId');
         rooms.forEach(eachRoom => {
             eachRoom['allocation'] = {};
@@ -57,7 +65,8 @@ router.post('/getAll', async (req, res) => {
                     'status': 'open',
                 }
             }
-        })
+        });
+
         res.status(200).json({
             message: 'Rooms retrieved successfully.',
             rooms,
